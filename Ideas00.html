@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>React Tutorial</title>
+    <title>React Reaction Game</title>
     <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
     <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
     <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
@@ -26,10 +26,21 @@
 
 
     var Health = React.createClass({
+    renderLives: function(){
+
+      var livesString = '';
+      for(var i =0; i < this.props.lives; i++)
+      {
+          livesString+= '❤';
+      }
+
+
+      return livesString;
+    },
     render: function() {
         return (
           <div className="health">
-          0-0-0
+          {this.renderLives()}
           </div>
         );
       }
@@ -55,7 +66,7 @@
       render: function() {
         return (
           <div className="MainGame">
-            <Health />
+            <Health lives='4' />
             <CurrentGame />
             <Score />
           </div>
@@ -74,11 +85,17 @@
   </body>
 
   <style type="text/css">
+  body{
+    font-family: "Courier New", Courier, monospace;
+  }
+
+
+
   .MainGame {
     border: 2px solid black;
     margin: 0 auto;
     width: 500px;
-    height: 500px;
+    height: 450px;
     overflow: hidden;
   }
 
@@ -94,7 +111,7 @@
   {
     width: 100%;
     background-color: Black;
-    color: white;
+    color: red;
     text-align: right;
   }
 
