@@ -14,11 +14,35 @@
     <div id="content"></div>
     <script type="text/babel">
 
+
+
     var FillTheBarGame = React.createClass({
+    getInitialState: function() {
+     return { percentage : 50 };
+   },
+  handleSubmit : function(e){
+    var currentPercentage = this.state.percentage;
+    var newPercentage = currentPercentage + 10;
+    if(newPercentage > 100)
+      newPercentage = 100
+
+    this.setState({ percentage : newPercentage });
+
+  },
     render: function() {
+        var formStyle = {'textAlign' : 'center'};
+        var progressBarStyle = {
+          'width' : this.state.percentage + "%",
+          'backgroundColor' : 'blue'
+        };
         return (
           <div className="MiniGame">
-            This is a game
+          <div style={progressBarStyle}>
+            &nbsp;
+          </div>
+          <form style={formStyle}>
+            <input type="button" value="Fill The Bar!!" className="GameButton" onClick={this.handleSubmit} />
+          </form>
           </div>
         );
       }
@@ -61,12 +85,18 @@
 
     var CurrentGame = FillTheBarGame;
 
+    // Our state manager -- Should be Redux / Flux / Etc
+    var gameData = {
+      lives : 4,
+
+    };
+
     // Main Game
     var MainGame = React.createClass({
       render: function() {
         return (
           <div className="MainGame">
-            <Health lives='4' />
+            <Health lives={gameData.lives} />
             <CurrentGame />
             <Score />
           </div>
@@ -124,6 +154,11 @@
     background-color: Black;
     color: white;
     text-align: center;
+  }
+
+  .GameButton
+  {
+    margin: 0 auto;
   }
 
 
