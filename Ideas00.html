@@ -14,12 +14,50 @@
     <div id="content"></div>
     <script type="text/babel">
 
+    var FillTheBarGame = React.createClass({
+    render: function() {
+        return (
+          <div className="MiniGame">
+            This is a game
+          </div>
+        );
+      }
+    });
+
+
+    var Health = React.createClass({
+    render: function() {
+        return (
+          <div className="health">
+          0-0-0
+          </div>
+        );
+      }
+    });
+
+    var Score = React.createClass({
+    render: function() {
+        return (
+          <div className="score">
+            Score : 00
+          </div>
+        );
+      }
+    });
+
+
+
+
+    var CurrentGame = FillTheBarGame;
+
     // Main Game
     var MainGame = React.createClass({
       render: function() {
         return (
           <div className="MainGame">
-            Hello, world! I am the game box.
+            <Health />
+            <CurrentGame />
+            <Score />
           </div>
         );
       }
@@ -41,7 +79,37 @@
     margin: 0 auto;
     width: 500px;
     height: 500px;
+    overflow: hidden;
   }
+
+  .MiniGame
+  {
+    margin: 50px auto 0px auto;
+    width: 300px;
+    height: 300px;
+    border: 2px solid black;
+  }
+
+  .health
+  {
+    width: 100%;
+    background-color: Black;
+    color: white;
+    text-align: right;
+  }
+
+  .score
+  {
+    margin-top: 20px;
+    border: 2px solid black;
+    height: 100px;
+    width: 100%;
+    background-color: Black;
+    color: white;
+    text-align: center;
+  }
+
+
 
   <style>
 </html>
