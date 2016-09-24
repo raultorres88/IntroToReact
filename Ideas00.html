@@ -57,13 +57,16 @@
 
 
     var GameOver = React.createClass({
+      handleReplay : function(){
+        this.props.onReplayAction();
+      },
       render: function() {
           var formStyle = {'textAlign' : 'center'};
           return (
             <div className="MiniGame">
-            <h1>GAME OVER</h1>
+            <h1 style={formStyle}>GAME OVER</h1>
             <form style={formStyle}>
-              <input type="button" value="REPLAY" className="GameButton" onClick={this.handleLose} />
+              <input type="button" value="REPLAY" className="GameButton" onClick={this.handleReplay} />
             </form>
             </div>
           );
@@ -153,7 +156,7 @@
     // Main Game
     var MainGame = React.createClass({
       getInitialState: function() {
-       return { lives: 4, currentGame : 'PressTheButton'  };
+       return { lives: 3, currentGame : 'PressTheButton'  };
      },
       render: function() {
         var currentComponent;
@@ -162,7 +165,7 @@
 
         if(this.state.lives == 0)
         {
-            currentComponent = <GameOver/>;
+            currentComponent = <GameOver onReplayAction={this.onReplay}/>;
         }
         else{
           switch(this.state.currentGame) {
@@ -195,8 +198,6 @@
         {
           currentGame = games[Math.floor(Math.random()*games.length)];
         }
-
-
         this.setState({lives: this.state.lives, currentGame : currentGame });
       },
       onLose: function(){
@@ -210,6 +211,16 @@
         }
 
         this.setState({lives: --this.state.lives, currentGame : currentGame});
+      },
+      onReplay: function(){
+        var currentGame = this.state.currentGame;
+
+        while(currentGame == this.state.currentGame)
+        {
+          currentGame = games[Math.floor(Math.random()*games.length)];
+        }
+
+        this.setState({lives: 3, currentGame : currentGame});
       }
     });
 
