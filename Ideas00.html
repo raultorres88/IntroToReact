@@ -23,8 +23,10 @@
   handleSubmit : function(e){
     var currentPercentage = this.state.percentage;
     var newPercentage = currentPercentage + 10;
-    if(newPercentage > 100)
-      newPercentage = 100
+    if(newPercentage >= 100){
+      newPercentage = 100;
+      this.props.onWinAction();
+    }
 
     this.setState({ percentage : newPercentage });
 
@@ -83,12 +85,17 @@
 
 
 
-    var CurrentGame = FillTheBarGame;
-
     // Our state manager -- Should be Redux / Flux / Etc
     var gameData = {
       lives : 4,
-
+      CurrentGame: FillTheBarGame,
+      onWin: function(){
+        alert('winner');
+      },
+      onLose: function(){
+        alert('loser');
+        lives--;
+      }
     };
 
     // Main Game
@@ -96,18 +103,20 @@
       render: function() {
         return (
           <div className="MainGame">
-            <Health lives={gameData.lives} />
-            <CurrentGame />
+            <Health lives={this.props.currentGameData.lives} />
+            <this.props.currentGameData.CurrentGame onWinAction={this.props.currentGameData.onWin} onLoseAction={this.props.currentGameData.onLose} />
             <Score />
           </div>
         );
       }
     });
 
+    
+
 
     // Render out the game
     ReactDOM.render(
-      <MainGame />,
+      <MainGame currentGameData={gameData} />,
       document.getElementById('content')
     );
 
