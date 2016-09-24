@@ -14,33 +14,26 @@
     <div id="content"></div>
     <script type="text/babel">
 
+  var games = ['FillTheBarGame', 'PressTheButton' ]
 
 
   var FillTheBarGame = React.createClass({
     getInitialState: function() {
-
       var onLose = this.props.onLoseAction;
-
       var timeoutId = setTimeout(function(){
         onLose();
       }, 5000);
-
-
      return { percentage : 50, timeoutId : timeoutId };
    },
   handleSubmit : function(e){
     var currentPercentage = this.state.percentage;
     var newPercentage = currentPercentage + 10;
     if(newPercentage >= 100){
-
       clearTimeout(this.state.timeoutId);
-
       newPercentage = 100;
       this.props.onWinAction();
     }
-
     this.setState({ percentage : newPercentage });
-
   },
     render: function() {
         var formStyle = {'textAlign' : 'center'};
@@ -61,6 +54,61 @@
         );
       }
     });
+
+
+    var GameOver = React.createClass({
+      render: function() {
+          var formStyle = {'textAlign' : 'center'};
+          return (
+            <div className="MiniGame">
+            <h1>GAME OVER</h1>
+            <form style={formStyle}>
+              <input type="button" value="REPLAY" className="GameButton" onClick={this.handleLose} />
+            </form>
+            </div>
+          );
+        }
+
+    });
+
+
+
+    var PressTheButton = React.createClass({
+      getInitialState: function() {
+        var onLose = this.props.onLoseAction;
+        var timeoutId = setTimeout(function(){
+          onLose();
+        }, 5000);
+       return { percentage : 50, timeoutId : timeoutId };
+     },
+    handleLose : function(e){
+      alert('wrong button');
+    },
+
+    handleWin : function(e){
+      clearTimeout(this.state.timeoutId);
+      this.props.onWinAction();
+    },
+      render: function() {
+          var formStyle = {'textAlign' : 'center'};
+          var progressBarStyle = {
+            'width' : this.state.percentage + "%",
+            'backgroundColor' : 'blue'
+          };
+          return (
+            <div className="MiniGame">
+            <form style={formStyle}>
+              <input type="button" value="Don't Press Me" className="GameButton" onClick={this.handleLose} />
+              <input type="button" value="Don't Press Me" className="GameButton" onClick={this.handleLose} />
+              <input type="button" value="Don't Press Me" className="GameButton" onClick={this.handleLose} />
+              <input type="button" value="Press Me" className="GameButton" onClick={this.handleWin} />
+              <input type="button" value="Don't Press Me" className="GameButton" onClick={this.handleLose} />
+              <input type="button" value="Don't Press Me" className="GameButton" onClick={this.handleLose} />
+            </form>
+            </div>
+          );
+        }
+      });
 
 
     var Health = React.createClass({
@@ -105,13 +153,34 @@
     // Main Game
     var MainGame = React.createClass({
       getInitialState: function() {
-       return { currentGameData : FillTheBarGame, lives: 4 };
+       return { lives: 4, currentGame : 'PressTheButton'  };
      },
       render: function() {
+        var currentComponent;
+
+        console.log('the current game is', this.state.currentGame)
+
+        if(this.state.lives == 0)
+        {
+            currentComponent = <GameOver/>;
+        }
+        else{
+          switch(this.state.currentGame) {
+              case 'FillTheBarGame':
+                  currentComponent = <FillTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose} />;
+                  break;
+              case 'PressTheButton':
+                  currentComponent = <PressTheButton onWinAction={this.onWin} onLoseAction={this.onLose} />;
+                  break;
+              default:
+                  currentComponent = <FillTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose} />;
+          }
+        }
+
         return (
           <div className="MainGame">
             <Health lives={this.state.lives} />
-            <this.state.currentGameData onWinAction={this.onWin} onLoseAction={this.onLose} />
+              {currentComponent}
             <Score />
           </div>
         );
@@ -119,12 +188,28 @@
 
       onWin: function(){
         alert('winner');
-        this.setState({lives: this.state.lives, currentGameData : FillTheBarGame });
+
+        var currentGame = this.state.currentGame;
+
+        while(currentGame == this.state.currentGame)
+        {
+          currentGame = games[Math.floor(Math.random()*games.length)];
+        }
+
+
+        this.setState({lives: this.state.lives, currentGame : currentGame });
       },
       onLose: function(){
         alert('loser');
 
-        this.setState({lives: --this.state.lives, currentGameData : FillTheBarGame });
+        var currentGame = this.state.currentGame;
+
+        while(currentGame == this.state.currentGame)
+        {
+          currentGame = games[Math.floor(Math.random()*games.length)];
+        }
+
+        this.setState({lives: --this.state.lives, currentGame : currentGame});
       }
     });
 
