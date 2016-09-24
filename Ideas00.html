@@ -16,14 +16,25 @@
 
 
 
-    var FillTheBarGame = React.createClass({
+  var FillTheBarGame = React.createClass({
     getInitialState: function() {
-     return { percentage : 50 };
+
+      var onLose = this.props.onLoseAction;
+
+      var timeoutId = setTimeout(function(){
+        onLose();
+      }, 5000);
+
+
+     return { percentage : 50, timeoutId : timeoutId };
    },
   handleSubmit : function(e){
     var currentPercentage = this.state.percentage;
     var newPercentage = currentPercentage + 10;
     if(newPercentage >= 100){
+
+      clearTimeout(this.state.timeoutId);
+
       newPercentage = 100;
       this.props.onWinAction();
     }
@@ -43,6 +54,7 @@
             &nbsp;
           </div>
           <form style={formStyle}>
+            <br/>
             <input type="button" value="Fill The Bar!!" className="GameButton" onClick={this.handleSubmit} />
           </form>
           </div>
@@ -87,31 +99,36 @@
 
     // Our state manager -- Should be Redux / Flux / Etc
     var gameData = {
-      lives : 4,
-      CurrentGame: FillTheBarGame,
-      onWin: function(){
-        alert('winner');
-      },
-      onLose: function(){
-        alert('loser');
-        lives--;
-      }
+
     };
 
     // Main Game
     var MainGame = React.createClass({
+      getInitialState: function() {
+       return { currentGameData : FillTheBarGame, lives: 4 };
+     },
       render: function() {
         return (
           <div className="MainGame">
-            <Health lives={this.props.currentGameData.lives} />
-            <this.props.currentGameData.CurrentGame onWinAction={this.props.currentGameData.onWin} onLoseAction={this.props.currentGameData.onLose} />
+            <Health lives={this.state.lives} />
+            <this.state.currentGameData onWinAction={this.onWin} onLoseAction={this.onLose} />
             <Score />
           </div>
         );
+      },
+
+      onWin: function(){
+        alert('winner');
+        this.setState({lives: this.state.lives, currentGameData : FillTheBarGame });
+      },
+      onLose: function(){
+        alert('loser');
+
+        this.setState({lives: --this.state.lives, currentGameData : FillTheBarGame });
       }
     });
 
-    
+
 
 
     // Render out the game
