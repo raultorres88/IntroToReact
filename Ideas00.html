@@ -71,10 +71,43 @@
             </div>
           );
         }
-
     });
 
+    var Winner = React.createClass({
+      getInitialState: function() {
+        var transitionAction = this.props.onTransition;
+        var timeoutId = setTimeout(function(){
+          transitionAction();
+        }, 1000);
+       return { };
+     },
+      render: function() {
+          var formStyle = {'textAlign' : 'center'};
+          return (
+            <div className="MiniGame">
+            <h1 style={formStyle}>Winner</h1>
+            </div>
+          );
+        }
+    });
 
+    var Loser = React.createClass({
+      getInitialState: function() {
+        var transitionAction = this.props.onTransition;
+        var timeoutId = setTimeout(function(){
+          transitionAction();
+        }, 1000);
+       return { };
+     },
+      render: function() {
+          var formStyle = {'textAlign' : 'center'};
+          return (
+            <div className="MiniGame">
+            <h1 style={formStyle}>Loser</h1>
+            </div>
+          );
+        }
+    });
 
     var PressTheButton = React.createClass({
       getInitialState: function() {
@@ -156,29 +189,34 @@
     // Main Game
     var MainGame = React.createClass({
       getInitialState: function() {
-       return { lives: 3, currentGame : 'PressTheButton'  };
+       return { lives: 3, currentComponent : 'PressTheButton'  };
      },
       render: function() {
         var currentComponent;
 
-        console.log('the current game is', this.state.currentGame)
+        console.log('the currentComponent is', this.state.currentComponent);
 
-        if(this.state.lives == 0)
-        {
-            currentComponent = <GameOver onReplayAction={this.onReplay}/>;
-        }
-        else{
-          switch(this.state.currentGame) {
+
+          switch(this.state.currentComponent) {
               case 'FillTheBarGame':
                   currentComponent = <FillTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose} />;
                   break;
               case 'PressTheButton':
                   currentComponent = <PressTheButton onWinAction={this.onWin} onLoseAction={this.onLose} />;
                   break;
+              case 'Winner':
+                  currentComponent = <Winner onTransition={this.onTransition}/>;
+                  break;
+              case 'Loser':
+                  currentComponent = <Loser onTransition={this.onTransition} />;
+                  break;
+              case 'GameOver':
+                  currentComponent = <GameOver onReplayAction={this.onReplay}/>;
+                  break;
               default:
                   currentComponent = <FillTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose} />;
           }
-        }
+
 
         return (
           <div className="MainGame">
@@ -190,37 +228,42 @@
       },
 
       onWin: function(){
-        alert('winner');
-
-        var currentGame = this.state.currentGame;
-
-        while(currentGame == this.state.currentGame)
-        {
-          currentGame = games[Math.floor(Math.random()*games.length)];
-        }
-        this.setState({lives: this.state.lives, currentGame : currentGame });
+        console.log('win, setting win screen')
+        this.setState({lives: this.state.lives, currentComponent : 'Winner', previousGame: this.state.currentComponent });
       },
       onLose: function(){
-        alert('loser');
+        console.log('lose, setting lose screen')
 
-        var currentGame = this.state.currentGame;
+        var currentComponent = 'Loser';
 
-        while(currentGame == this.state.currentGame)
+        if(this.state.lives - 1 <= 0)
         {
-          currentGame = games[Math.floor(Math.random()*games.length)];
+          currentComponent = 'GameOver';
         }
 
-        this.setState({lives: --this.state.lives, currentGame : currentGame});
+        this.setState({lives: --this.state.lives, currentComponent : currentComponent, previousGame: this.state.currentComponent });
+      },
+
+      onTransition: function()
+      {
+        console.log('transition');
+
+        var currentComponent = this.state.previousGame;
+        while(currentComponent == this.state.previousGame)
+        {
+          currentComponent = games[Math.floor(Math.random()*games.length)];
+        }
+
+        this.setState({lives: this.state.lives, currentComponent : currentComponent, previousGame: currentComponent  });
       },
       onReplay: function(){
-        var currentGame = this.state.currentGame;
-
-        while(currentGame == this.state.currentGame)
+        var currentComponent = this.state.previousGame;
+        while(currentComponent == this.state.previousGame)
         {
-          currentGame = games[Math.floor(Math.random()*games.length)];
+          currentComponent = games[Math.floor(Math.random()*games.length)];
         }
 
-        this.setState({lives: 3, currentGame : currentGame});
+        this.setState({lives: 3, currentComponent : currentComponent, previousGame: currentComponent  });
       }
     });
 
