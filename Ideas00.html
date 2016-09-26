@@ -427,12 +427,8 @@
         };
       },
       render: function() {
-        var currentComponent;
-
-        console.log('the currentComponentName is', this.state.currentComponentName);
-
-        currentComponent = this.componentFactory(this.state.currentComponentName)
-
+        var currentComponent = this.componentFactory(this.state.currentComponentName)
+        
         return (
           <div className="MainGame" >
             <Health lives={this.state.lives}/>
