@@ -178,7 +178,7 @@
 
     var Winner = React.createClass({
       getInitialState: function() {
-        var transitionAction = this.props.onTransition;
+        var transitionAction = this.props.onTransitionAction;
         var timeoutId = setTimeout(function() {
           transitionAction();
         }, 1000);
@@ -198,7 +198,7 @@
 
     var Loser = React.createClass({
       getInitialState: function() {
-        var transitionAction = this.props.onTransition;
+        var transitionAction = this.props.onTransitionAction;
         var timeoutId = setTimeout(function() {
           transitionAction();
         }, 1000);
@@ -450,9 +450,9 @@
           case 'EmptyTheBarGame':
             return <EmptyTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose}/>;
           case 'Winner':
-            return <Winner onTransition={this.onTransition}/>;
+            return <Winner onTransitionAction={this.onTransition}/>;
           case 'Loser':
-            return <Loser onTransition={this.onTransition}/>;
+            return <Loser onTransitionAction={this.onTransition}/>;
           case 'GameOver':
             return <GameOver onReplayAction={this.onReplay}/>;
           default:
