@@ -427,12 +427,13 @@
         };
       },
       render: function() {
-        var currentComponent = this.componentFactory(this.state.currentComponentName)
-        
+        var activeGameComponent =
+          this.componentFactory(this.state.currentComponentName)
+
         return (
           <div className="MainGame" >
             <Health lives={this.state.lives}/>
-            {currentComponent}
+            {activeGameComponent}
             <Score currentScore={this.state.score}/>
           </div>
         );
@@ -443,15 +444,15 @@
 
         switch (name) {
           case 'FillTheBarGame':
-            return (<FillTheBarGame onWinAction = {this.onWin} onLoseAction = {this.onLose}/>);
+            return <FillTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose}/>;
           case 'PressTheButton':
-            return (<PressTheButton onWinAction={this.onWin} onLoseAction={this.onLose}/>);
+            return <PressTheButton onWinAction={this.onWin} onLoseAction={this.onLose}/>;
           case 'EmptyTheBarGame':
-            return (<EmptyTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose}/>);
+            return <EmptyTheBarGame onWinAction={this.onWin} onLoseAction={this.onLose}/>;
           case 'Winner':
-            return (<Winner onTransition = {this.onTransition}/>);
+            return <Winner onTransition={this.onTransition}/>;
           case 'Loser':
-            return (<Loser onTransition = {this.onTransition}/>);
+            return <Loser onTransition={this.onTransition}/>;
           case 'GameOver':
             return <GameOver onReplayAction={this.onReplay}/>;
           default:
@@ -470,9 +471,7 @@
       },
       onLose: function() {
         console.log('lose, setting lose screen')
-
         var currentComponentName = 'Loser';
-
         if (this.state.lives - 1 <= 0) {
           currentComponentName = 'GameOver';
         }
@@ -486,7 +485,6 @@
 
       onTransition: function() {
         console.log('transition');
-
         var currentComponentName = this.state.previousComponentName;
         while (currentComponentName == this.state.previousComponentName) {
           currentComponentName = games[Math.floor(Math.random() * games.length)];
